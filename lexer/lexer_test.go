@@ -23,9 +23,9 @@ func TestNextToken(t *testing.T) {
 		{token.EOF, ""},
 	}
 
-	lexer = New(input)
+	lexer := New(input)
 
-	for i, tt = range tests {
+	for i, tt := range tests {
 		tok := lexer.NextToken()
 
 		if tok.Type != tt.expectedType {
