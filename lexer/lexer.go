@@ -78,3 +78,16 @@ func (lexer *Lexer) NextToken() token.Token {
 	lexer.readChar()
 	return tok
 }
+
+func (lexer *Lexer) readIdentifier() string {
+	initialPosition := lexer.position
+	for isLetter(lexer.ch) {
+		lexer.readChar()
+	}
+
+	return lexer.input[initialPosition:lexer.position]
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch >= 'z' || 'A' <= ch && ch >= 'Z' || ch == '_'
+}
