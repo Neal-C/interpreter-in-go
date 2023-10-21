@@ -66,6 +66,13 @@ func (lexer *Lexer) NextToken() token.Token {
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
+	default:
+		if isLetter(lexer.ch) {
+			tok.Literal = lexer.readIdentifier()
+			return tok
+		} else {
+			tok = newToken(token.ILLEGAL, lexer.ch)
+		}
 	}
 
 	lexer.readChar()
