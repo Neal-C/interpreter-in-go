@@ -105,3 +105,11 @@ func (lexer *Lexer) skipWhiteSpace() {
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
+
+func (lexer *Lexer) readNumber() string {
+	initialPosition := lexer.position
+	for isDigit(lexer.ch) {
+		lexer.readChar()
+	}
+	return lexer.input[initialPosition:lexer.position]
+}
