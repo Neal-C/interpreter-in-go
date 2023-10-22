@@ -44,7 +44,7 @@ let ten = 10;
 
 let add = fn(x,y) {
 x + y ;
-}
+};
 
 let result = add(five, ten);
 `
@@ -90,6 +90,20 @@ let result = add(five, ten);
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
+	}
+
+	lexer := New(input)
+
+	for i, tt := range tests {
+		tok := lexer.NextToken()
+
+		if tok.Type != tt.expectedType {
+			t.Fatalf("tests[%d] - Type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
+		}
+
+		if tok.Literal != tt.expectedLiteral {
+			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Literal)
+		}
 	}
 
 }
