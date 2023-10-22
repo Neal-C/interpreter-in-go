@@ -9,6 +9,8 @@ type Lexer struct {
 	ch           byte // current char under examination
 }
 
+const BLANK_WHITESPACE = ' '
+
 func New(input string) *Lexer {
 	lexer := &Lexer{
 		input: input,
@@ -45,6 +47,8 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 
 func (lexer *Lexer) NextToken() token.Token {
 	var tok token.Token
+
+	lexer.skipWhiteSpace()
 
 	switch lexer.ch {
 	case '=':
@@ -90,4 +94,10 @@ func (lexer *Lexer) readIdentifier() string {
 
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch >= 'z' || 'A' <= ch && ch >= 'Z' || ch == '_'
+}
+
+func (lexer *Lexer) skipWhiteSpace() {
+	for lexer.ch == BLANK_WHITESPACE || lexer.ch == '\t' || lexer.ch == '\n' || lexer.ch == '\r' {
+		lexer.readChar()
+	}
 }
