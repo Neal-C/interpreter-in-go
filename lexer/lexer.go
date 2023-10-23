@@ -114,7 +114,7 @@ func isLetter(ch byte) bool {
 }
 
 func (lexer *Lexer) skipWhitespace() {
-	for lexer.ch == ' ' || lexer.ch == '\t' || lexer.ch == '\n' || lexer.ch == '\r' {
+	for lexer.ch == BLANK_WHITESPACE || lexer.ch == '\t' || lexer.ch == '\n' || lexer.ch == '\r' {
 		lexer.readChar()
 	}
 }
