@@ -25,6 +25,7 @@ const (
 	SLASH    = "/"
 	LT       = "<"
 	GT       = ">"
+	BANG     = "!"
 
 	// Delimiters
 
