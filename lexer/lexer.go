@@ -52,13 +52,26 @@ func (lexer *Lexer) NextToken() token.Token {
 
 	switch lexer.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, lexer.ch)
+		if lexer.peekChar() == '=' {
+			ch := lexer.ch
+			lexer.readChar()
+			tok = token.Token{Type: token.EQ, Literal: string(ch) + string(lexer.ch)}
+		} else {
+			tok = newToken(token.ASSIGN, lexer.ch)
+		}
 	case '+':
 		tok = newToken(token.PLUS, lexer.ch)
 	case '-':
 		tok = newToken(token.MINUS, lexer.ch)
 	case '!':
-		tok = newToken(token.BANG, lexer.ch)
+		if lexer.peekChar() == '=' {
+			ch := lexer.ch
+			lexer.readChar()
+			tok = token.Token{Type: token.NOT_EQ, Literal: string(ch) + string(lexer.ch)}
+		} else {
+
+			tok = newToken(token.BANG, lexer.ch)
+		}
 	case '/':
 		tok = newToken(token.SLASH, lexer.ch)
 	case '*':
