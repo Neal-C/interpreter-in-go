@@ -24,5 +24,25 @@ func New(lexer *lexer.Lexer) *Parser {
 }
 
 func (self *Parser) ParseProgram() *ast.Program {
-	return nil
+	program := &ast.Program{}
+	program.Statements = []ast.Statement{}
+
+	for self.currentToken.Type != token.EOF {
+		stmt := self.ParseStatement()
+		if stmt != nil {
+			program.Statements = append(program.Statements, stmt)
+		}
+		self.nextToken()
+	}
+
+	return program
+}
+
+func (self *Parser) ParseStatement() ast.Statement {
+	switch self.currentToken.Type {
+	case token.LET:
+		return self.ParseStatement()
+	default:
+		return nil
+	}
 }
