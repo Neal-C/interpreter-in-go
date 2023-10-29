@@ -41,7 +41,7 @@ func (self *Parser) ParseProgram() *ast.Program {
 func (self *Parser) ParseStatement() ast.Statement {
 	switch self.currentToken.Type {
 	case token.LET:
-		return self.ParseStatement()
+		return self.ParseLetStatement()
 	default:
 		return nil
 	}
