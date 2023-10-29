@@ -46,3 +46,42 @@ func (self *Parser) ParseStatement() ast.Statement {
 		return nil
 	}
 }
+
+func (self *Parser) ParseLetStatement() *ast.LetStatement {
+	stmt := &ast.LetStatement{Token: self.currentToken}
+
+	if !self.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.Name = &ast.Identifier{Token: self.currentToken, Value: self.currentToken.Literal}
+
+	if !self.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	// TODO : we're skipping until we encounter a semi-colon
+	if !self.currentTokenIs(token.SEMICOLON) {
+		self.nextToken()
+	}
+
+	return stmt
+
+}
+
+func (self *Parser) currentTokenIs(t token.TokenType) bool {
+	return self.currentToken.Type == t
+}
+
+func (self *Parser) peekTokenIs(t token.TokenType) bool {
+	return self.peekToken.Type == t
+}
+
+func (self *Parser) expectPeek(t token.TokenType) bool {
+	if self.peekTokenIs(t) {
+		self.nextToken()
+		return true
+	} else {
+		return false
+	}
+}
