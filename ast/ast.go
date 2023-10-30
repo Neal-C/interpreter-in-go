@@ -54,3 +54,13 @@ func (self *LetStatement) statementNode() {}
 func (self *LetStatement) TokenLiteral() string {
 	return self.Token.Literal
 }
+
+type ReturnStatement struct {
+	Token       token.Token //the return keyword
+	ReturnValue Expression
+}
+
+func (self *ReturnStatement) statementNode() {}
+func (self *ReturnStatement) TokenLiteral() string {
+	return self.Token.Literal
+}
