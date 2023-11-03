@@ -64,3 +64,13 @@ func (self *ReturnStatement) statementNode() {}
 func (self *ReturnStatement) TokenLiteral() string {
 	return self.Token.Literal
 }
+
+type ExpressionStatement struct {
+	Token      token.Token // the first token of the expression
+	Expression Expression
+}
+
+func (self *ExpressionStatement) statementNode() {}
+func (self *ExpressionStatement) TokenLiteral() string {
+	return self.Token.Literal
+}
