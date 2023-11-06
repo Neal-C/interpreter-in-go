@@ -1,9 +1,13 @@
 package ast
 
-import "github.com/Neal-C/interpreter-in-go/token"
+import (
+	"bytes"
+	"github.com/Neal-C/interpreter-in-go/token"
+)
 
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 // marker interface$
@@ -32,6 +36,15 @@ func (self *Program) TokenLiteral() string {
 	}
 }
 
+func (self *Program) String() string {
+	var out bytes.Buffer
+	for _, s := range self.Statements {
+		out.WriteString(s.String())
+	}
+
+	return out.String()
+}
+
 type Identifier struct {
 	Token token.Token // The token.IDENT token
 	Value string
@@ -41,6 +54,10 @@ func (self *Identifier) expressionNode() {}
 
 func (self *Identifier) TokenLiteral() string {
 	return self.Token.Literal
+}
+
+func (self *Identifier) String() string {
+	return self.Value
 }
 
 type LetStatement struct {
@@ -55,6 +72,22 @@ func (self *LetStatement) TokenLiteral() string {
 	return self.Token.Literal
 }
 
+func (self *LetStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(self.TokenLiteral() + " ")
+	out.WriteString(self.Name.String())
+	out.WriteString(" = ")
+
+	if self.Value != nil {
+		out.WriteString(self.Value.String())
+	}
+
+	out.WriteString(";")
+
+	return out.String()
+}
+
 type ReturnStatement struct {
 	Token       token.Token //the return keyword
 	ReturnValue Expression
@@ -65,6 +98,21 @@ func (self *ReturnStatement) TokenLiteral() string {
 	return self.Token.Literal
 }
 
+func (self *ReturnStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(self.TokenLiteral() + " ")
+
+	if self.ReturnValue != nil {
+
+		out.WriteString(self.ReturnValue.String())
+	}
+
+	out.WriteString(";")
+
+	return out.String()
+}
+
 type ExpressionStatement struct {
 	Token      token.Token // the first token of the expression
 	Expression Expression
@@ -73,4 +121,12 @@ type ExpressionStatement struct {
 func (self *ExpressionStatement) statementNode() {}
 func (self *ExpressionStatement) TokenLiteral() string {
 	return self.Token.Literal
+}
+
+func (self *ExpressionStatement) String() string {
+	if self.Expression != nil {
+		return self.Expression.String()
+	}
+
+	return ""
 }
