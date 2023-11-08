@@ -125,7 +125,7 @@ func (self *Parser) parseLetStatement() *ast.LetStatement {
 	}
 
 	// TODO : we're skipping until we encounter a semi-colon
-	if !self.currentTokenIs(token.SEMICOLON) {
+	for !self.currentTokenIs(token.SEMICOLON) {
 		self.nextToken()
 	}
 
