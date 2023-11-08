@@ -80,7 +80,7 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	t.FailNow()
 }
 
-func testReturnStatement(t *testing.T) {
+func TestReturnStatement(t *testing.T) {
 	input := `
 return 5;
 return 10;
@@ -106,5 +106,36 @@ return 993322;
 		if returnStmt.TokenLiteral() != "return" {
 			t.Errorf("retrunStmt literal is not 'return', got %q", returnStmt.TokenLiteral())
 		}
+	}
+}
+
+func TestIdentifierExpression(t *testing.T) {
+	input := `foobar;`
+
+	currentLexer := lexer.New(input)
+	currentParser := New(currentLexer)
+	currentProgram := currentParser.ParseProgram()
+	checkParserErrors(t, currentParser)
+
+	if len(currentProgram.Statements) != 1 {
+		t.Fatalf("program has not enough statements. got %d", len(currentProgram.Statements))
+	}
+
+	stmt, ok := currentProgram.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("expression is not a *ast.ExpressStatement, got %T", currentProgram.Statements[0])
+	}
+
+	ident, ok := stmt.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("expression is not an *ast.Identifier, got %T", stmt.Expression)
+	}
+
+	if ident.Value != "foobar" {
+		t.Errorf("ident.Value not %s, got %s", "foobar", ident.Value)
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		t.Errorf("ident.TokenLiteral() not %s, got : %s ", "foobar", ident.TokenLiteral())
 	}
 }
