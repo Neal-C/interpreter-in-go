@@ -7,11 +7,26 @@ import (
 	"github.com/Neal-C/interpreter-in-go/token"
 )
 
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
 type Parser struct {
-	lexer        *lexer.Lexer
-	currentToken token.Token
-	peekToken    token.Token
-	errors       []string
+	lexer          *lexer.Lexer
+	currentToken   token.Token
+	peekToken      token.Token
+	errors         []string
+	prefixParseFns map[token.TokenType]prefixParseFn
+	infixParseFns  map[token.TokenType]infixParseFn
+}
+
+func (self *Parser) registerPrefix(tokenKey token.TokenType, associatedFn prefixParseFn) {
+	self.prefixParseFns[tokenKey] = associatedFn
+}
+
+func (self *Parser) registerInfix(tokenKey token.TokenType, associatedFn infixParseFn) {
+	self.infixParseFns[tokenKey] = associatedFn
 }
 
 func (self *Parser) nextToken() {
