@@ -104,7 +104,7 @@ func (self *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	stmt := &ast.ExpressionStatement{Token: self.currentToken}
 	stmt.Expression = self.parseExpression(LOWEST)
 
-	if self.peekTokenIs(token.SEMICOLON) {
+	if !self.peekTokenIs(token.SEMICOLON) {
 		self.nextToken()
 	}
 

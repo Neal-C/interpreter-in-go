@@ -3,6 +3,7 @@ package parser
 import (
 	"github.com/Neal-C/interpreter-in-go/ast"
 	"github.com/Neal-C/interpreter-in-go/lexer"
+	"log"
 	"testing"
 )
 
@@ -15,6 +16,7 @@ let foobar = 838383;`
 	var parser *Parser = New(theLexer)
 
 	var program *ast.Program = parser.ParseProgram()
+	log.Println(program.String())
 	checkParserErrors(t, parser)
 
 	if program == nil {
@@ -91,6 +93,7 @@ return 993322;
 	var parser *Parser = New(theLexer)
 
 	program := parser.ParseProgram()
+	log.Println(program.String())
 	checkParserErrors(t, parser)
 
 	if len(program.Statements) != 3 {
@@ -115,6 +118,7 @@ func TestIdentifierExpression(t *testing.T) {
 	currentLexer := lexer.New(input)
 	currentParser := New(currentLexer)
 	currentProgram := currentParser.ParseProgram()
+	log.Println(currentProgram.String())
 	checkParserErrors(t, currentParser)
 
 	if len(currentProgram.Statements) != 1 {
