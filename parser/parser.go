@@ -15,13 +15,13 @@ type (
 const (
 	_ int = iota
 	LOWEST
-	//EQUALS
-	//LESSGREATER
-	//SUM
-	//PRODUCT
-	//PREFIX
+	EQUALS
+	LESSGREATER
+	SUM
+	PRODUCT
+	PREFIX
 	//// myFunction(x)
-	//CALL
+	CALL
 )
 
 type Parser struct {
