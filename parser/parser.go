@@ -55,6 +55,9 @@ func New(lexer *lexer.Lexer) *Parser {
 	parser.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	parser.registerPrefix(token.IDENT, parser.parseIdentifier)
 
+	// Read two tokens, so curToken and peekToken are both set
+	parser.nextToken()
+	parser.nextToken()
 	return parser
 }
 
@@ -104,7 +107,7 @@ func (self *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	stmt := &ast.ExpressionStatement{Token: self.currentToken}
 	stmt.Expression = self.parseExpression(LOWEST)
 
-	if !self.peekTokenIs(token.SEMICOLON) {
+	if self.peekTokenIs(token.SEMICOLON) {
 		self.nextToken()
 	}
 
@@ -157,6 +160,7 @@ func (self *Parser) expectPeek(t token.TokenType) bool {
 		self.nextToken()
 		return true
 	} else {
+		self.peekErrors(t)
 		return false
 	}
 }
