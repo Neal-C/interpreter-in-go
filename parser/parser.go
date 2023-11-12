@@ -5,6 +5,7 @@ import (
 	"github.com/Neal-C/interpreter-in-go/ast"
 	"github.com/Neal-C/interpreter-in-go/lexer"
 	"github.com/Neal-C/interpreter-in-go/token"
+	"strconv"
 )
 
 type (
@@ -54,6 +55,7 @@ func New(lexer *lexer.Lexer) *Parser {
 
 	parser.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	parser.registerPrefix(token.IDENT, parser.parseIdentifier)
+	parser.registerPrefix(token.INT, parser.parseIntegerLiteral)
 
 	// Read two tokens, so curToken and peekToken are both set
 	parser.nextToken()
@@ -145,6 +147,21 @@ func (self *Parser) parseReturnStatement() *ast.ReturnStatement {
 		self.nextToken()
 	}
 	return stmt
+}
+
+func (self *Parser) parseIntegerLiteral() ast.Expression {
+	literal := &ast.IntegerLiteral{Token: self.currentToken}
+
+	value, err := strconv.ParseInt(self.currentToken.Literal, 0, 64)
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as integer", self.currentToken.Literal)
+		self.errors = append(self.errors, msg)
+		return nil
+	}
+
+	literal.Value = value
+
+	return literal
 }
 
 func (self *Parser) currentTokenIs(t token.TokenType) bool {
