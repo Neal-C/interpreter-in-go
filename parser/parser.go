@@ -164,6 +164,11 @@ func (self *Parser) parseIntegerLiteral() ast.Expression {
 	return literal
 }
 
+func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
+	msg := fmt.Sprintf("not prefix parse function found for %s found", tok)
+	self.errors = append(self.errors, msg)
+}
+
 func (self *Parser) currentTokenIs(t token.TokenType) bool {
 	return self.currentToken.Type == t
 }
