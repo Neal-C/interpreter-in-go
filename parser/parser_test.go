@@ -175,3 +175,45 @@ func TestIntegerLiteral(t *testing.T) {
 		t.Errorf("literal.TokenLiteral() is not '%d', got %s ", 5, literal.TokenLiteral())
 	}
 }
+
+func TestParsingPrefixExpressions(t *testing.T) {
+	prefixTests := []struct {
+		input        string
+		operator     string
+		integerValue int64
+	}{
+		{"!5", "!", 5},
+		{"-15", "-", 15},
+	}
+
+	for _, tt := range prefixTests {
+		myLexer := lexer.New(tt.input)
+		parser := New(myLexer)
+		program := parser.ParseProgram()
+		checkParserErrors(t, parser)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain %d statements, got %d", 1, len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+		if !ok {
+			t.Fatalf("program.Statements[0] is not a *ast.ExpressionStatement, got %T", program.Statements[0])
+		}
+
+		expression, ok := stmt.Expression.(*ast.PrefixExpression)
+
+		if !ok {
+			t.Fatalf("stmt is not a *ast.PrefixExpression, got %T", stmt.Expression)
+		}
+
+		if expression.operator != tt.operator {
+			t.Fatalf("expression operator is not %s, got %s", "!", expression.operator)
+		}
+
+		if !testIntegerLiteral(t, expression.Right, tt.integerValue) {
+			return
+		}
+	}
+}
