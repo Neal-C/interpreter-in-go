@@ -230,8 +230,8 @@ func TestParsingPrefixExpressions(t *testing.T) {
 			t.Fatalf("stmt is not a *ast.PrefixExpression, got %T", stmt.Expression)
 		}
 
-		if expression.operator != tt.operator {
-			t.Fatalf("expression operator is not %s, got %s", "!", expression.operator)
+		if expression.Operator != tt.operator {
+			t.Fatalf("expression operator is not %s, got %s", "!", expression.Operator)
 		}
 
 		if !testIntegerLiteral(t, expression.Right, tt.integerValue) {
