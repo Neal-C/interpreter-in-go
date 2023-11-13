@@ -97,6 +97,7 @@ func (self *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := self.prefixParseFns[self.currentToken.Type]
 
 	if prefix == nil {
+		self.noPrefixParseFnError(self.currentToken.Type)
 		return nil
 	}
 
