@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/Neal-C/interpreter-in-go/ast"
 	"github.com/Neal-C/interpreter-in-go/lexer"
 	"log"
@@ -174,6 +175,27 @@ func TestIntegerLiteral(t *testing.T) {
 	if literal.TokenLiteral() != "5" {
 		t.Errorf("literal.TokenLiteral() is not '%d', got %s ", 5, literal.TokenLiteral())
 	}
+}
+
+func testIntegerLiteral(t *testing.T, intergerLiteral ast.Expression, value int64) bool {
+	integer, ok := intergerLiteral.(*ast.IntegerLiteral)
+
+	if !ok {
+		t.Errorf("intergerLiteral is not a *ast.IntegerLiteral, got %T", intergerLiteral)
+		return false
+	}
+
+	if integer.Value != value {
+		t.Errorf("integer.Value not %d, got %d", value, integer.Value)
+		return false
+	}
+
+	if integer.TokenLiteral() != fmt.Sprintf("%d", value) {
+		t.Errorf("integer.TokenLiteral() not %d, got %s", value, integer.TokenLiteral())
+		return false
+	}
+
+	return true
 }
 
 func TestParsingPrefixExpressions(t *testing.T) {
