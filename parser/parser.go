@@ -54,10 +54,22 @@ func New(lexer *lexer.Lexer) *Parser {
 	}
 
 	parser.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+
 	parser.registerPrefix(token.IDENT, parser.parseIdentifier)
 	parser.registerPrefix(token.INT, parser.parseIntegerLiteral)
 	parser.registerPrefix(token.BANG, parser.parsePrefixExpression)
 	parser.registerPrefix(token.MINUS, parser.parsePrefixExpression)
+
+	parser.infixParseFns = make(map[token.TokenType]infixParseFn)
+
+	parser.registerInfix(token.PLUS, parser.parseInfixExpression)
+	parser.registerInfix(token.MINUS, parser.parseInfixExpression)
+	parser.registerInfix(token.SLASH, parser.parseInfixExpression)
+	parser.registerInfix(token.ASTERISK, parser.parseInfixExpression)
+	parser.registerInfix(token.EQ, parser.parseInfixExpression)
+	parser.registerInfix(token.NOT_EQ, parser.parseInfixExpression)
+	parser.registerInfix(token.LT, parser.parseInfixExpression)
+	parser.registerInfix(token.GT, parser.parseInfixExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
 	parser.nextToken()
@@ -178,6 +190,20 @@ func (self *Parser) parsePrefixExpression() ast.Expression {
 	expression.Right = self.parseExpression(PREFIX)
 
 	return expression
+}
+
+func (self *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	infixExpression := &ast.InfixExpression{
+		Token:    self.currentToken,
+		Operator: self.currentToken.Literal,
+		Left:     left,
+	}
+
+	precedence := self.peekPrecedence()
+	self.nextToken()
+	infixExpression.Right = self.parseExpression(precedence)
+
+	return infixExpression
 }
 
 func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
