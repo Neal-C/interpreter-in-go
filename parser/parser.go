@@ -211,3 +211,30 @@ func (self *Parser) peekErrors(t token.TokenType) {
 	message := fmt.Sprintf("expected next token to be %s, got %s instead", t, self.peekToken.Type)
 	self.errors = append(self.errors, message)
 }
+
+var precedences = map[token.TokenType]int{
+	token.EQ:       EQUALS,
+	token.NOT_EQ:   EQUALS,
+	token.LT:       LESSGREATER,
+	token.GT:       LESSGREATER,
+	token.PLUS:     SUM,
+	token.MINUS:    SUM,
+	token.SLASH:    PRODUCT,
+	token.ASTERISK: PRODUCT,
+}
+
+func (self *Parser) peekPrecedence() int {
+	if precedence, ok := precedences[self.peekToken.Type]; ok {
+		return precedence
+	}
+
+	return LOWEST
+}
+
+func (self *Parser) currentPrecedence() int {
+	if precedence, ok := precedences[self.currentToken.Type]; ok {
+		return precedence
+	}
+
+	return LOWEST
+}
