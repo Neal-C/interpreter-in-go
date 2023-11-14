@@ -181,7 +181,7 @@ func (self *Parser) parsePrefixExpression() ast.Expression {
 }
 
 func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
-	msg := fmt.Sprintf("not prefix parse function found for %s found", tok)
+	msg := fmt.Sprintf("no prefix parse function found for %s found", tok)
 	self.errors = append(self.errors, msg)
 }
 
