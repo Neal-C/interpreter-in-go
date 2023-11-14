@@ -108,14 +108,25 @@ func (self *Parser) parseIdentifier() ast.Expression {
 }
 
 func (self *Parser) parseExpression(precedence int) ast.Expression {
-	prefix := self.prefixParseFns[self.currentToken.Type]
+	prefixFn := self.prefixParseFns[self.currentToken.Type]
 
-	if prefix == nil {
+	if prefixFn == nil {
 		self.noPrefixParseFnError(self.currentToken.Type)
 		return nil
 	}
 
-	leftExpression := prefix()
+	leftExpression := prefixFn()
+
+	for !self.peekTokenIs(token.SEMICOLON) && precedence < self.peekPrecedence() {
+		infixFn := self.infixParseFns[self.peekToken.Type]
+		if infixFn == nil {
+			return leftExpression
+		}
+
+		self.nextToken()
+
+		leftExpression = infixFn(leftExpression)
+	}
 
 	return leftExpression
 }
