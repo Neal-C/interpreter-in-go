@@ -21,7 +21,7 @@ const (
 	SUM
 	PRODUCT
 	PREFIX
-	//// myFunction(x)
+	// // myFunction(x)
 	CALL
 )
 
@@ -210,7 +210,7 @@ func (self *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 		Left:     left,
 	}
 
-	precedence := self.peekPrecedence()
+	precedence := self.currentPrecedence()
 	self.nextToken()
 	infixExpression.Right = self.parseExpression(precedence)
 
