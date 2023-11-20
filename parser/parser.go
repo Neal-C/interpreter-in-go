@@ -5,6 +5,7 @@ import (
 	"github.com/Neal-C/interpreter-in-go/ast"
 	"github.com/Neal-C/interpreter-in-go/lexer"
 	"github.com/Neal-C/interpreter-in-go/token"
+	"log"
 	"strconv"
 )
 
@@ -108,6 +109,10 @@ func (self *Parser) parseIdentifier() ast.Expression {
 }
 
 func (self *Parser) parseExpression(precedence int) ast.Expression {
+
+	log.Println("BEGIN  parseExpression !")
+	defer log.Println("END parseExpression !")
+
 	prefixFn := self.prefixParseFns[self.currentToken.Type]
 
 	if prefixFn == nil {
@@ -132,6 +137,10 @@ func (self *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 func (self *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+
+	log.Println("BEGIN  parseExpressionStatement")
+	defer log.Println("END parseExpressionStatement")
+
 	stmt := &ast.ExpressionStatement{Token: self.currentToken}
 	stmt.Expression = self.parseExpression(LOWEST)
 
@@ -176,6 +185,10 @@ func (self *Parser) parseReturnStatement() *ast.ReturnStatement {
 }
 
 func (self *Parser) parseIntegerLiteral() ast.Expression {
+
+	log.Println("BEGIN  parseIntegerLiteral")
+	defer log.Println("END parseIntegerLiteral")
+
 	literal := &ast.IntegerLiteral{Token: self.currentToken}
 
 	value, err := strconv.ParseInt(self.currentToken.Literal, 0, 64)
@@ -191,6 +204,10 @@ func (self *Parser) parseIntegerLiteral() ast.Expression {
 }
 
 func (self *Parser) parsePrefixExpression() ast.Expression {
+
+	log.Println("BEGIN  parsePrefixExpression")
+	defer log.Println("END parsePrefixExpression")
+
 	expression := &ast.PrefixExpression{
 		Token:    self.currentToken,
 		Operator: self.currentToken.Literal,
@@ -204,6 +221,10 @@ func (self *Parser) parsePrefixExpression() ast.Expression {
 }
 
 func (self *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+
+	log.Println("BEGIN  parseInfixExpression")
+	defer log.Println("END parseInfixExpression")
+
 	infixExpression := &ast.InfixExpression{
 		Token:    self.currentToken,
 		Operator: self.currentToken.Literal,
