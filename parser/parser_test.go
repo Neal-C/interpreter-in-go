@@ -331,3 +331,24 @@ func TestOperatorPrecedence(t *testing.T) {
 		}
 	}
 }
+
+func testIdentifier(t *testing.T, expression ast.Expression, value string) bool {
+	identifier, ok := expression.(*ast.Identifier)
+
+	if !ok {
+		t.Errorf("expression is not *ast.Identifier, got %T", expression)
+		return false
+	}
+
+	if identifier.Value != value {
+		t.Errorf("identifier.Value is not %s, got %s", value, identifier.Value)
+		return false
+	}
+
+	if identifier.TokenLiteral() != value {
+		t.Errorf("identifier.TokenLiteral() is not %s, got %s", value, identifier.TokenLiteral())
+		return false
+	}
+
+	return true
+}
