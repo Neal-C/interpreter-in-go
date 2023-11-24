@@ -366,3 +366,30 @@ func testLiteralExpression(t *testing.T, expression ast.Expression, expected any
 	t.Errorf("type of the expression is not handled, got : %T", expression)
 	return false
 }
+
+func testInfixExpression(t *testing.T, expression ast.Expression, leftHand any, operator string, rightHand any) bool {
+
+	infixExpression, ok := expression.(*ast.InfixExpression)
+
+	if !ok {
+		t.Errorf("expression is not an *ast.InfixExpression, got = %T(%s)", expression, expression)
+		return false
+	}
+
+	if !testLiteralExpression(t, infixExpression.Left, leftHand) {
+		return false
+	}
+
+	if infixExpression.Operator != operator {
+		t.Errorf("infixExpression.Operator is not '%s' , got = %q", operator, infixExpression.Operator)
+		return false
+	}
+
+	if !testLiteralExpression(t, infixExpression.Right, rightHand) {
+		return false
+	}
+
+	return true
+}
+
+// TODO: clean test suite by using the test utils
