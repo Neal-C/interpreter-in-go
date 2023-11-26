@@ -89,7 +89,7 @@ func (self *LetStatement) String() string {
 }
 
 type ReturnStatement struct {
-	Token       token.Token //the return keyword
+	Token       token.Token // the return keyword
 	ReturnValue Expression
 }
 
@@ -185,4 +185,17 @@ func (self *InfixExpression) String() string {
 	out.WriteString(")")
 
 	return out.String()
+}
+
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (self *Boolean) expressionNode() {}
+func (self *Boolean) TokenLiteral() string {
+	return self.Token.Literal
+}
+func (self *Boolean) String() string {
+	return self.Token.Literal
 }
