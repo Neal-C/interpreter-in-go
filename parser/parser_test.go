@@ -357,6 +357,26 @@ func testIdentifier(t *testing.T, expression ast.Expression, value string) bool 
 	return true
 }
 
+func testBooleanLiteral(t *testing.T, expression ast.Expression, value bool) bool {
+	boolean, ok := expression.(*ast.Boolean)
+
+	if !ok {
+		t.Errorf("expression is not a *ast.Boolean, got %T", expression)
+		return false
+	}
+
+	if boolean.Value != value {
+		t.Errorf("boolean.Value is not %t, got %t", value, boolean.Value)
+		return false
+	}
+
+	if boolean.TokenLiteral() != fmt.Sprintf("%t", value) {
+		t.Errorf("boolean.TokenLiteral() not %t, got %s", value, boolean.TokenLiteral())
+		return false
+	}
+	return true
+}
+
 func testLiteralExpression(t *testing.T, expression ast.Expression, expected any) bool {
 	switch value := expected.(type) {
 	case int:
@@ -365,6 +385,8 @@ func testLiteralExpression(t *testing.T, expression ast.Expression, expected any
 		testIntegerLiteral(t, expression, value)
 	case string:
 		testIdentifier(t, expression, value)
+	case bool:
+		testBooleanLiteral(t, expression, value)
 	}
 
 	t.Errorf("type of the expression is not handled, got : %T", expression)
