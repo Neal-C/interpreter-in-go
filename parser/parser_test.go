@@ -279,7 +279,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 			t.Fatalf("stmt.Expression is not a *ast.InfixExpression, got %T", stmt.Expression)
 		}
 
-		if !testIntegerLiteral(t, expression.Left, tt.leftValue) {
+		if !testLiteralExpression(t, expression.Left, tt.leftValue) {
 			return
 		}
 
@@ -287,7 +287,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 			t.Fatalf("Operator is not %s , got=%s", tt.operator, expression.Operator)
 		}
 
-		if !testIntegerLiteral(t, expression.Right, tt.rightValue) {
+		if !testLiteralExpression(t, expression.Right, tt.rightValue) {
 			return
 		}
 
@@ -378,13 +378,13 @@ func testBooleanLiteral(t *testing.T, expression ast.Expression, value bool) boo
 func testLiteralExpression(t *testing.T, expression ast.Expression, expected any) bool {
 	switch value := expected.(type) {
 	case int:
-		testIntegerLiteral(t, expression, int64(value))
+		return testIntegerLiteral(t, expression, int64(value))
 	case int64:
-		testIntegerLiteral(t, expression, value)
+		return testIntegerLiteral(t, expression, value)
 	case string:
-		testIdentifier(t, expression, value)
+		return testIdentifier(t, expression, value)
 	case bool:
-		testBooleanLiteral(t, expression, value)
+		return testBooleanLiteral(t, expression, value)
 	}
 
 	t.Errorf("type of the expression is not handled, got : %T", expression)
