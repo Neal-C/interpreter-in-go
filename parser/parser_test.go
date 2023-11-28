@@ -295,8 +295,6 @@ func TestParsingInfixExpressions(t *testing.T) {
 }
 
 func TestOperatorPrecedenceParsing(t *testing.T) {
-	// TODO: FIX whitespacing on String Methods !
-	// TODO: the bytes.Buffer thingy
 	tableTest := []struct {
 		input    string
 		expected string

@@ -5,6 +5,8 @@ import (
 	"github.com/Neal-C/interpreter-in-go/token"
 )
 
+const BLANK_WHITESPACE string = " "
+
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -75,9 +77,9 @@ func (self *LetStatement) TokenLiteral() string {
 func (self *LetStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(self.TokenLiteral() + " ")
+	out.WriteString(self.TokenLiteral() + BLANK_WHITESPACE)
 	out.WriteString(self.Name.String())
-	out.WriteString(" = ")
+	out.WriteString(BLANK_WHITESPACE + "=" + BLANK_WHITESPACE)
 
 	if self.Value != nil {
 		out.WriteString(self.Value.String())
@@ -101,7 +103,7 @@ func (self *ReturnStatement) TokenLiteral() string {
 func (self *ReturnStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(self.TokenLiteral() + " ")
+	out.WriteString(self.TokenLiteral() + BLANK_WHITESPACE)
 
 	if self.ReturnValue != nil {
 
@@ -180,7 +182,7 @@ func (self *InfixExpression) String() string {
 
 	out.WriteString("(")
 	out.WriteString(self.Left.String())
-	out.WriteString(" " + self.Operator + " ")
+	out.WriteString(BLANK_WHITESPACE + self.Operator + BLANK_WHITESPACE)
 	out.WriteString(self.Right.String())
 	out.WriteString(")")
 
