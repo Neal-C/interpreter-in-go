@@ -201,3 +201,31 @@ func (self *Boolean) TokenLiteral() string {
 func (self *Boolean) String() string {
 	return self.Token.Literal
 }
+
+type IfExpression struct {
+	Token       token.Token // the if token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+func (self *IfExpression) expressionNode() {}
+func (self *IfExpression) TokenLiteral() string {
+	return self.Token.Literal
+}
+func (self *IfExpression) String() string {
+
+	var out bytes.Buffer
+
+	out.WriteString("if")
+	out.WriteString(self.Condition.String())
+	out.WriteString(BLANK_WHITESPACE)
+	out.WriteString(self.Consequence.String())
+
+	if self.Alternative != nil {
+		out.WriteString("else" + BLANK_WHITESPACE)
+		out.WriteString(self.Alternative.String())
+	}
+
+	return out.String()
+}
