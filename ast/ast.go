@@ -229,3 +229,22 @@ func (self *IfExpression) String() string {
 
 	return out.String()
 }
+
+type BlockStatement struct {
+	Token      token.Token // the { token
+	Statements []Statement
+}
+
+func (self *BlockStatement) statementNode() {}
+func (self *BlockStatement) TokenLiteral() string {
+	return self.Token.Literal
+}
+func (self *BlockStatement) String() string {
+	var out bytes.Buffer
+
+	for _, stmt := range self.Statements {
+		out.WriteString(stmt.String())
+	}
+
+	return out.String()
+}
