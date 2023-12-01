@@ -247,7 +247,7 @@ func (self *Parser) parseIfExpression() ast.Expression {
 
 	self.nextToken()
 
-	expression.Condition := self.parseExpression(LOWEST)
+	expression.Condition = self.parseExpression(LOWEST)
 
 	if !self.expectPeek(token.RPAREN){
 		return nil
