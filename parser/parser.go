@@ -86,7 +86,7 @@ func (self *Parser) ParseProgram() *ast.Program {
 	program.Statements = []ast.Statement{}
 
 	for !self.currentTokenIs(token.EOF) {
-		stmt := self.ParseStatement()
+		stmt := self.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
 		}
@@ -96,7 +96,7 @@ func (self *Parser) ParseProgram() *ast.Program {
 	return program
 }
 
-func (self *Parser) ParseStatement() ast.Statement {
+func (self *Parser) parseStatement() ast.Statement {
 	switch self.currentToken.Type {
 	case token.LET:
 		return self.parseLetStatement()
@@ -238,6 +238,27 @@ func (self *Parser) parseGroupedExpression() ast.Expression {
 	return expression
 }
 
+func (self *Parser) parseBlockStatement() *ast.BlockStatement {
+
+	block := &ast.BlockStatement{Token: self.currentToken}
+
+	block.Statements = []ast.Statement{}
+
+	self.nextToken()
+
+	for !self.currentTokenIs(token.RBRACE) && !self.currentTokenIs(token.EOF) {
+		stmt := self.parseStatement()
+
+		if stmt != nil {
+			block.Statements = append(block.Statements, stmt)
+		}
+
+		self.nextToken()
+	}
+
+	return block
+}
+
 func (self *Parser) parseIfExpression() ast.Expression {
 	expression := &ast.IfExpression{Token: self.currentToken}
 
@@ -249,15 +270,15 @@ func (self *Parser) parseIfExpression() ast.Expression {
 
 	expression.Condition = self.parseExpression(LOWEST)
 
-	if !self.expectPeek(token.RPAREN){
+	if !self.expectPeek(token.RPAREN) {
 		return nil
 	}
 
-	if !self.expectPeek(token.LBRACE){
+	if !self.expectPeek(token.LBRACE) {
 		return nil
 	}
 
-	expression.Consequence := self.parseBlockStatement()
+	expression.Consequence = self.parseBlockStatement()
 
 	return expression
 }
