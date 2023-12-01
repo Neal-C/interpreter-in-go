@@ -391,6 +391,67 @@ func TestIfExpressions(t *testing.T) {
 	}
 }
 
+func TestIfElseExpressions(t *testing.T) {
+	input := `if ( x < y ) { x } else { y }`
+
+	myLexer := lexer.New(input)
+	parser := New(myLexer)
+	program := parser.ParseProgram()
+	checkParserErrors(t, parser)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program's body does not contain %d statement, got %d \n", 1, len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement, got %T", program.Statements[0])
+	}
+
+	expression, ok := stmt.Expression.(*ast.IfExpression)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not *ast.IfExpression, got %T", stmt.Expression)
+	}
+
+	if !testInfixExpression(t, expression.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(expression.Consequence.Statements) != 1 {
+		t.Errorf("expression.Consequence.Statements is not 1 statements, got %d \n", len(expression.Consequence.Statements))
+	}
+
+	consequence, ok := expression.Consequence.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("expression.Consequence.Statements[0] is not *ast.ExpressionStatement, got %T", expression.Consequence.Statements[0])
+	}
+
+	if !testIdentifier(t, consequence.Expression, "x") {
+		return
+	}
+
+	if expression.Alternative == nil {
+		t.Errorf("expression.Alternative was  nil, got %+v", expression.Alternative)
+	}
+
+	if len(expression.Alternative.Statements) != 1 {
+		t.Errorf("expression.Alternative.Statements is not 1 statements, got %d \n", len(expression.Alternative.Statements))
+	}
+
+	alternative, ok := expression.Alternative.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("expression.Alternative.Statements[0] is not *ast.ExpressionStatement, got %T", expression.Alternative.Statements[0])
+	}
+
+	if !testIdentifier(t, alternative.Expression, "y") {
+		return
+	}
+}
+
 func testIdentifier(t *testing.T, expression ast.Expression, value string) bool {
 	identifier, ok := expression.(*ast.Identifier)
 
