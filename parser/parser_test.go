@@ -344,6 +344,53 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}
 }
 
+func TestIfExpressions(t *testing.T) {
+	input := `if ( x < y ) { x }`
+
+	myLexer := lexer.New(input)
+	parser := New(myLexer)
+	program := parser.ParseProgram()
+	checkParserErrors(t, parser)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program's body does not contain %d statement, got %d \n", 1, len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement, got %T", program.Statements[0])
+	}
+
+	expression, ok := stmt.Expression.(*ast.IfExpression)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not *ast.IfExpression, got %T", stmt.Expression)
+	}
+
+	if !testInfixExpression(t, expression.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(expression.Consequence.Statements) != 1 {
+		t.Errorf("expression.Consequence.Statements is not 1 statements, got %d \n", len(expression.Consequence.Statements))
+	}
+
+	consequence, ok := expression.Consequence.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("expression.Consequence.Statements[0] is not *ast.ExpressionStatement, got %T", expression.Consequence.Statements[0])
+	}
+
+	if !testIdentifier(t, consequence.Expression, "x") {
+		return
+	}
+
+	if expression.Alternative != nil {
+		t.Errorf("expression.Alternative was not nil, got %+v", expression.Alternative)
+	}
+}
+
 func testIdentifier(t *testing.T, expression ast.Expression, value string) bool {
 	identifier, ok := expression.(*ast.Identifier)
 
