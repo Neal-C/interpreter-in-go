@@ -280,6 +280,18 @@ func (self *Parser) parseIfExpression() ast.Expression {
 
 	expression.Consequence = self.parseBlockStatement()
 
+	if self.peekTokenIs(token.ELSE) {
+
+		self.nextToken()
+
+		if !self.expectPeek(token.LBRACE) {
+			return nil
+		}
+
+		expression.Alternative = self.parseBlockStatement()
+
+	}
+
 	return expression
 }
 
