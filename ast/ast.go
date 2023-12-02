@@ -263,7 +263,7 @@ func (self *FunctionLiteral) TokenLiteral() string {
 func (self *FunctionLiteral) String() string {
 	var out bytes.Buffer
 
-	params := []string{}
+	var params []string
 
 	for _, param := range self.Parameters {
 
