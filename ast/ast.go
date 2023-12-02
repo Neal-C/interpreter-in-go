@@ -3,6 +3,7 @@ package ast
 import (
 	"bytes"
 	"github.com/Neal-C/interpreter-in-go/token"
+	"strings"
 )
 
 const BLANK_WHITESPACE string = " "
@@ -245,6 +246,36 @@ func (self *BlockStatement) String() string {
 	for _, stmt := range self.Statements {
 		out.WriteString(stmt.String())
 	}
+
+	return out.String()
+}
+
+type FunctionLiteral struct {
+	Token      token.Token // the fn keyword
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
+func (self *FunctionLiteral) expressionNode() {}
+func (self *FunctionLiteral) TokenLiteral() string {
+	return self.Token.Literal
+}
+func (self *FunctionLiteral) String() string {
+	var out bytes.Buffer
+
+	params := []string{}
+
+	for _, param := range self.Parameters {
+
+		params = append(params, param.String())
+
+	}
+
+	out.WriteString(self.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ","+BLANK_WHITESPACE))
+	out.WriteString(")" + BLANK_WHITESPACE)
+	out.WriteString(self.Body.String())
 
 	return out.String()
 }
