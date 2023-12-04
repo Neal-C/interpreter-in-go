@@ -496,6 +496,36 @@ func TestFunctionLiteral(t *testing.T) {
 	testInfixExpression(t, bodyStatement.Expression, "x", "+", "y")
 }
 
+func TestFunctionParametersParsing(t *testing.T) {
+	tableTest := []struct {
+		input              string
+		expectedParameters []string
+	}{
+		{"fn() {};", []string{}},
+		{"fn(x) {};", []string{"x"}},
+		{"fn(x,y,z) {};", []string{"x", "y", "z"}},
+	}
+
+	for _, tt := range tableTest {
+
+		myLexer := lexer.New(tt.input)
+		parser := New(myLexer)
+		program := parser.ParseProgram()
+		checkParserErrors(t, parser)
+
+		stmt, _ := program.Statements[0].(*ast.ExpressionStatement)
+		functionLiteral := stmt.Expression.(*ast.FunctionLiteral)
+
+		if len(functionLiteral.Parameters) != len(tt.expectedParameters) {
+			t.Errorf("length parameter wrong, want %d, got %d", len(tt.expectedParameters), len(functionLiteral.Parameters))
+		}
+
+		for index, identifier := range tt.expectedParameters {
+			testLiteralExpression(t, functionLiteral.Parameters[index], identifier)
+		}
+	}
+}
+
 func testIdentifier(t *testing.T, expression ast.Expression, value string) bool {
 	identifier, ok := expression.(*ast.Identifier)
 
