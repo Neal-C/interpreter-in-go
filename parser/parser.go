@@ -314,6 +314,36 @@ func (self *Parser) parseFunctionLiteral() ast.Expression {
 	return functionLiteral
 }
 
+func (self *Parser) parseFunctionParameters() []*ast.Identifier {
+	var identifiers []*ast.Identifier
+
+	// no param function literall
+	if self.peekTokenIs(token.RPAREN) {
+		self.nextToken()
+		return identifiers
+	}
+
+	self.nextToken()
+
+	ident := &ast.Identifier{Token: self.currentToken, Value: self.currentToken.Literal}
+	identifiers = append(identifiers, ident)
+
+	for self.peekTokenIs(token.COMMA) {
+
+		self.nextToken()
+		self.nextToken()
+
+		nextIdent := &ast.Identifier{Token: self.currentToken, Value: self.currentToken.Literal}
+		identifiers = append(identifiers, nextIdent)
+
+	}
+
+	if !self.expectPeek(token.RPAREN) {
+		return nil
+	}
+	return identifiers
+}
+
 func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
 	msg := fmt.Sprintf("no prefix parse function found for %s found", tok)
 	self.errors = append(self.errors, msg)
