@@ -366,7 +366,7 @@ func (self *Parser) parseCallArguments() []ast.Expression {
 	self.nextToken()
 	args = append(args, self.parseExpression(LOWEST))
 
-	for self.peekTokenIs(token.ASSIGN) {
+	for self.peekTokenIs(token.COMMA) {
 		self.nextToken()
 		self.nextToken()
 		args = append(args, self.parseExpression(LOWEST))
@@ -421,6 +421,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.LPAREN:   CALL,
 }
 
 func (self *Parser) peekPrecedence() int {
