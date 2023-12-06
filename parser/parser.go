@@ -75,6 +75,7 @@ func New(lexer *lexer.Lexer) *Parser {
 	parser.registerInfix(token.NOT_EQ, parser.parseInfixExpression)
 	parser.registerInfix(token.LT, parser.parseInfixExpression)
 	parser.registerInfix(token.GT, parser.parseInfixExpression)
+	parser.registerInfix(token.LPAREN, parser.parseCallExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
 	parser.nextToken()
@@ -342,6 +343,15 @@ func (self *Parser) parseFunctionParameters() []*ast.Identifier {
 		return nil
 	}
 	return identifiers
+}
+
+func (self *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+
+	expression := &ast.CallExpression{Token: self.currentToken, Function: function}
+
+	expression.Arguments = self.parseCallArguments()
+
+	return expression
 }
 
 func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
