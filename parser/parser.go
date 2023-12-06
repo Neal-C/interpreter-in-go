@@ -354,6 +354,32 @@ func (self *Parser) parseCallExpression(function ast.Expression) ast.Expression 
 	return expression
 }
 
+func (self *Parser) parseCallArguments() []ast.Expression {
+	var args []ast.Expression
+
+	// if empty/no-args function call
+	if self.peekTokenIs(token.RPAREN) {
+		self.nextToken()
+		return args
+	}
+
+	self.nextToken()
+	args = append(args, self.parseExpression(LOWEST))
+
+	for self.peekTokenIs(token.ASSIGN) {
+		self.nextToken()
+		self.nextToken()
+		args = append(args, self.parseExpression(LOWEST))
+	}
+
+	if !self.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return args
+
+}
+
 func (self *Parser) noPrefixParseFnError(tok token.TokenType) {
 	msg := fmt.Sprintf("no prefix parse function found for %s found", tok)
 	self.errors = append(self.errors, msg)
