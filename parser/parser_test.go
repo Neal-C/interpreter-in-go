@@ -9,36 +9,69 @@ import (
 )
 
 func TestLetStatements(t *testing.T) {
-	input := `let x = 5;
-let y = 10;
-let foobar = 838383;`
+	// 	input := `let x = 5;
+	// let y = 10;
+	// let foobar = 838383;`
+	//
+	// 	var theLexer *lexer.Lexer = lexer.New(input)
+	// 	var parser *Parser = New(theLexer)
+	//
+	// 	var program *ast.Program = parser.ParseProgram()
+	// 	log.Println(program.String())
+	// 	checkParserErrors(t, parser)
+	//
+	// 	if program == nil {
+	// 		t.Fatalf("ParseProgram() returned nil")
+	// 	}
+	//
+	// 	if len(program.Statements) != 3 {
+	// 		t.Fatalf("program.Statements do not contain 3 statements, got : %d", len(program.Statements))
+	// 	}
+	//
+	// 	tests := []struct {
+	// 		expectedIdentifer string
+	// 	}{
+	// 		{"x"},
+	// 		{"y"},
+	// 		{"foobar"},
+	// 	}
+	//
+	// 	for index, tabletest := range tests {
+	// 		stmt := program.Statements[index]
+	// 		if !testLetStatement(t, stmt, tabletest.expectedIdentifer) {
+	// 			return
+	// 		}
+	// 	}
 
-	var theLexer *lexer.Lexer = lexer.New(input)
-	var parser *Parser = New(theLexer)
-
-	var program *ast.Program = parser.ParseProgram()
-	log.Println(program.String())
-	checkParserErrors(t, parser)
-
-	if program == nil {
-		t.Fatalf("ParseProgram() returned nil")
-	}
-
-	if len(program.Statements) != 3 {
-		t.Fatalf("program.Statements do not contain 3 statements, got : %d", len(program.Statements))
-	}
-
-	tests := []struct {
-		expectedIdentifer string
+	tableTests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      any
 	}{
-		{"x"},
-		{"y"},
-		{"foobar"},
+		{"let x = 5;", "x", 5},
+		{"let y = true;", "y", true},
+		{"let foobar = y;", "foobar", "y"},
 	}
 
-	for index, tabletest := range tests {
-		stmt := program.Statements[index]
-		if !testLetStatement(t, stmt, tabletest.expectedIdentifer) {
+	for _, tt := range tableTests {
+		myLexer := lexer.New(tt.input)
+		parser := New(myLexer)
+		program := parser.ParseProgram()
+		checkParserErrors(t, parser)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statement, got %d", len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
+
+		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
+			return
+		}
+
+		value := stmt.(*ast.LetStatement).Value
+
+		if !testLiteralExpression(t, value, tt.expectedValue) {
 			return
 		}
 	}
