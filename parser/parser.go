@@ -163,13 +163,15 @@ func (self *Parser) parseLetStatement() *ast.LetStatement {
 		return nil
 	}
 
-	// TODO : we're skipping until we encounter a semi-colon
-	for !self.currentTokenIs(token.SEMICOLON) {
+	self.nextToken()
+
+	stmt.Value = self.parseExpression(LOWEST)
+
+	if self.peekTokenIs(token.SEMICOLON) {
 		self.nextToken()
 	}
 
 	return stmt
-
 }
 
 func (self *Parser) parseReturnStatement() *ast.ReturnStatement {
