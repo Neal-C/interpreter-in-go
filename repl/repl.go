@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/Neal-C/interpreter-in-go/lexer"
-	"github.com/Neal-C/interpreter-in-go/token"
+	"github.com/Neal-C/interpreter-in-go/parser"
 	"io"
 )
 
@@ -21,12 +21,24 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		line := scanner.Text()
-
 		monkeyLexer := lexer.New(line)
+		monkeyParser := parser.New(monkeyLexer)
+		program := monkeyParser.ParseProgram()
 
-		for tok := monkeyLexer.NextToken(); tok.Type != token.EOF; tok = monkeyLexer.NextToken() {
-			fmt.Printf("%+v \n", tok)
+		if len(monkeyParser.Errors()) != 0 {
+			printParseErrors(out, monkeyParser.Errors())
+			continue
 		}
+
+		io.WriteString(out, program.String())
+		io.WriteString(out, "\n")
 	}
 
+}
+
+func printParseErrors(writer io.Writer, errors []string) {
+	for _, error := range errors {
+		_, _ = io.WriteString(writer, "\t"+error+"\n")
+		// no error handling apparently
+	}
 }
