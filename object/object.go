@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+const (
+	INTEGER_OBJ = "INTEGER"
+)
+
 type ObjectType string
 type Object interface {
 	Type() ObjectType
