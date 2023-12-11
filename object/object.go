@@ -7,6 +7,7 @@ import (
 const (
 	INTEGER_OBJ = "INTEGER"
 	BOOLEAN_OBJ = "BOOLEAN"
+	NULL_OBJ    = "NULL"
 )
 
 type ObjectType string
@@ -28,3 +29,8 @@ type Boolean struct {
 
 func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
+
+type Null struct{}
+
+func (self *Null) Type() ObjectType { return NULL_OBJ }
+func (self *Null) Inspect() string  { return "null" }
