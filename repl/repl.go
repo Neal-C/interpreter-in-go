@@ -3,12 +3,13 @@ package repl
 import (
 	"bufio"
 	"fmt"
+	"github.com/Neal-C/interpreter-in-go/evaluator"
 	"github.com/Neal-C/interpreter-in-go/lexer"
 	"github.com/Neal-C/interpreter-in-go/parser"
 	"io"
 )
 
-const PROMPT = ">>"
+const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
@@ -30,7 +31,9 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		io.WriteString(out, program.String())
+		evaluated := evaluator.Eval(program)
+
+		io.WriteString(out, evaluated.Inspect())
 		io.WriteString(out, "\n")
 	}
 
