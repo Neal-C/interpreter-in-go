@@ -94,3 +94,21 @@ func evalInfixExpression(operator string, leftHandSign object.Object, rightHandS
 	}
 
 }
+
+func evalIntegerInfixExpression(operator string, leftHandSign object.Object, rightHandSign object.Object) object.Object {
+	leftValue := leftHandSign.(*object.Integer).Value
+	rightValue := rightHandSign.(*object.Integer).Value
+
+	switch operator {
+	case "+":
+		return &object.Integer{Value: leftValue + rightValue}
+	case "-":
+		return &object.Integer{Value: leftValue - rightValue}
+	case "*":
+		return &object.Integer{Value: leftValue * rightValue}
+	case "/":
+		return &object.Integer{Value: leftValue / rightValue}
+	default:
+		return NULL
+	}
+}
