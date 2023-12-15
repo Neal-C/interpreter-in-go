@@ -48,17 +48,17 @@ func nativeNodeToBooleanObject(input bool) *object.Boolean {
 	return FALSE
 }
 
-func evalPrefixExpression(operator string, right object.Object) object.Object {
+func evalPrefixExpression(operator string, rightHandSign object.Object) object.Object {
 	switch operator {
 	case "!":
-		return evalBangOperatorExpression(right)
+		return evalBangOperatorExpression(rightHandSign)
 	default:
 		return NULL
 	}
 }
 
-func evalBangOperatorExpression(rightHand object.Object) object.Object {
-	switch rightHand {
+func evalBangOperatorExpression(rightHandSign object.Object) object.Object {
+	switch rightHandSign {
 	case TRUE:
 		return FALSE
 	case FALSE:
