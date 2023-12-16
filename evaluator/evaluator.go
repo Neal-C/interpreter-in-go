@@ -89,6 +89,10 @@ func evalInfixExpression(operator string, leftHandSign object.Object, rightHandS
 	switch {
 	case leftHandSign.Type() == object.INTEGER_OBJ && rightHandSign.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, leftHandSign, rightHandSign)
+	case operator == "==":
+		return nativeNodeToBooleanObject(leftHandSign == rightHandSign)
+	case operator == "!=":
+		return nativeNodeToBooleanObject(leftHandSign != rightHandSign)
 	default:
 		return NULL
 	}
