@@ -108,6 +108,14 @@ func evalIntegerInfixExpression(operator string, leftHandSign object.Object, rig
 		return &object.Integer{Value: leftValue * rightValue}
 	case "/":
 		return &object.Integer{Value: leftValue / rightValue}
+	case "<":
+		return nativeNodeToBooleanObject(leftValue < rightValue)
+	case ">":
+		return nativeNodeToBooleanObject(leftValue > rightValue)
+	case "==":
+		return nativeNodeToBooleanObject(leftValue == rightValue)
+	case "!=":
+		return nativeNodeToBooleanObject(leftValue != rightValue)
 	default:
 		return NULL
 	}
