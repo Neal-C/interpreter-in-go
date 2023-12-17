@@ -28,6 +28,10 @@ func Eval(node ast.Node) object.Object {
 		leftHandSign := Eval(node.Left)
 		rightHandSign := Eval(node.Right)
 		return evalInfixExpression(node.Operator, leftHandSign, rightHandSign)
+	case *ast.BlockStatement:
+		return evalStatements(node.Statements)
+	case *ast.IfExpression:
+		return evalIfExpression(node)
 
 	}
 
@@ -122,5 +126,30 @@ func evalIntegerInfixExpression(operator string, leftHandSign object.Object, rig
 		return nativeNodeToBooleanObject(leftValue != rightValue)
 	default:
 		return NULL
+	}
+}
+
+func evalIfExpression(ifExpr *ast.IfExpression) object.Object {
+	condition := Eval(ifExpr.Condition)
+
+	if isTruthy(condition) {
+		return Eval(ifExpr.Consequence)
+	} else if ifExpr.Alternative != nil {
+		return Eval(ifExpr.Alternative)
+	} else {
+		return NULL
+	}
+}
+
+func isTruthy(obj object.Object) bool {
+	switch obj {
+	case NULL:
+		return false
+	case TRUE:
+		return true
+	case FALSE:
+		return false
+	default:
+		return true
 	}
 }
