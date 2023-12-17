@@ -145,7 +145,7 @@ func TestIfElseExpression(t *testing.T) {
 		evaluated := testEval(tt.input)
 		integer, ok := tt.expected.(int)
 
-		if !ok {
+		if ok {
 			testIntegerObject(t, evaluated, int64(integer))
 		} else {
 			testNullObject(t, evaluated)
@@ -155,7 +155,7 @@ func TestIfElseExpression(t *testing.T) {
 
 func testNullObject(t *testing.T, obj object.Object) bool {
 	if obj != NULL {
-		t.Errorf("object is not NULL. got = %T (%v)", obj)
+		t.Errorf("object is not NULL. got = %T (%v)", obj, obj)
 		return false
 	}
 	return true
