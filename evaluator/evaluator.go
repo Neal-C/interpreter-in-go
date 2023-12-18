@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"github.com/Neal-C/interpreter-in-go/ast"
 	"github.com/Neal-C/interpreter-in-go/object"
 )
@@ -47,8 +48,11 @@ func evalProgram(stmts []ast.Statement) object.Object {
 	for _, stmt := range stmts {
 		result = Eval(stmt)
 
-		if resultValue, ok := result.(*object.ReturnValue); ok {
-			return resultValue.Value
+		switch result := result.(type) {
+		case *object.ReturnValue:
+			return result.Value
+		case *object.Error:
+			return result
 		}
 	}
 
@@ -70,7 +74,7 @@ func evalPrefixExpression(operator string, rightHandSign object.Object) object.O
 	case "-":
 		return evalMinusPrefixOperatorExpression(rightHandSign)
 	default:
-		return NULL
+		return newError("unknown operator: %s%s", operator, rightHandSign.Type())
 	}
 }
 
@@ -89,6 +93,9 @@ func evalBangOperatorExpression(rightHandSign object.Object) object.Object {
 
 func evalMinusPrefixOperatorExpression(rightHandSign object.Object) object.Object {
 	if rightHandSign.Type() != object.INTEGER_OBJ {
+		return newError("unknown operator: -%s", rightHandSign.Type())
+	}
+	if rightHandSign.Type() != object.INTEGER_OBJ {
 		return NULL
 	}
 
@@ -104,8 +111,10 @@ func evalInfixExpression(operator string, leftHandSign object.Object, rightHandS
 		return nativeNodeToBooleanObject(leftHandSign == rightHandSign)
 	case operator == "!=":
 		return nativeNodeToBooleanObject(leftHandSign != rightHandSign)
+	case leftHandSign.Type() != rightHandSign.Type():
+		return newError("type mismatch: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
 	default:
-		return NULL
+		return newError("unknown operator: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
 	}
 
 }
@@ -132,7 +141,7 @@ func evalIntegerInfixExpression(operator string, leftHandSign object.Object, rig
 	case "!=":
 		return nativeNodeToBooleanObject(leftValue != rightValue)
 	default:
-		return NULL
+		return newError("unknown operator: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
 	}
 }
 
@@ -167,10 +176,17 @@ func evalBlockStatements(block *ast.BlockStatement) object.Object {
 	for _, statement := range block.Statements {
 		result = Eval(statement)
 
-		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
-			return result
+		if result != nil {
+			resultType := result.Type()
+			if resultType == object.RETURN_VALUE_OBJ || resultType == object.ERROR_OBJ {
+				return result
+			}
 		}
 	}
 
 	return result
+}
+
+func newError(format string, others ...any) *object.Error {
+	return &object.Error{Message: fmt.Sprintf(format, others...)}
 }
