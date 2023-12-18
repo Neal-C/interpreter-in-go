@@ -190,3 +190,10 @@ func evalBlockStatements(block *ast.BlockStatement) object.Object {
 func newError(format string, others ...any) *object.Error {
 	return &object.Error{Message: fmt.Sprintf(format, others...)}
 }
+
+func isError(obj object.Object) bool {
+	if obj != nil {
+		return obj.Type() == object.ERROR_OBJ
+	}
+	return false
+}
