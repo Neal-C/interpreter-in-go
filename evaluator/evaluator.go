@@ -160,6 +160,10 @@ func evalIntegerInfixExpression(operator string, leftHandSign object.Object, rig
 func evalIfExpression(ifExpr *ast.IfExpression) object.Object {
 	condition := Eval(ifExpr.Condition)
 
+	if isError(condition) {
+		return condition
+	}
+
 	if isTruthy(condition) {
 		return Eval(ifExpr.Consequence)
 	} else if ifExpr.Alternative != nil {
