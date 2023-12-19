@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Neal-C/interpreter-in-go/evaluator"
 	"github.com/Neal-C/interpreter-in-go/lexer"
+	"github.com/Neal-C/interpreter-in-go/object"
 	"github.com/Neal-C/interpreter-in-go/parser"
 	"io"
 )
@@ -13,6 +14,7 @@ const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Printf(PROMPT)
@@ -31,7 +33,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 
 		io.WriteString(out, evaluated.Inspect())
 		io.WriteString(out, "\n")
