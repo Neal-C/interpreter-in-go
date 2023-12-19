@@ -35,8 +35,10 @@ func Start(in io.Reader, out io.Writer) {
 
 		evaluated := evaluator.Eval(program, env)
 
-		io.WriteString(out, evaluated.Inspect())
-		io.WriteString(out, "\n")
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
 	}
 
 }
