@@ -48,6 +48,11 @@ func Eval(node ast.Node) object.Object {
 			return value
 		}
 		return &object.ReturnValue{Value: value}
+	case *ast.LetStatement:
+		value := Eval(node.Value)
+		if isError(value) {
+			return value
+		}
 
 	}
 
