@@ -54,6 +54,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return value
 		}
 		env.Set(node.Name.Value, value)
+		// marker: standalone let statement, leads to segfault/nil dereferencing
+		// go run . -> let a = 5; -> BOOM
+		// go run . -> let a = 5; a; -> 5
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
 	}
