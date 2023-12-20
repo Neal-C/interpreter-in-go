@@ -108,11 +108,11 @@ let result = add(five, ten);
 
 }
 
-//Note that although the input looks like an actual piece of Monkey source code, some lines don’t
-//really make sense, with gibberish like !-/*5. That’s okay. The lexer’s job is not to tell us
-//whether code makes sense, works or contains errors. That comes in a later stage
-//The lexer
-//should only turn this input into tokens
+// Note that although the input looks like an actual piece of Monkey source code, some lines don’t
+// really make sense, with gibberish like !-/*5. That’s okay. The lexer’s job is not to tell us
+// whether code makes sense, works or contains errors. That comes in a later stage
+// The lexer
+// should only turn this input into tokens
 
 func TestNextToken3(t *testing.T) {
 	input := `let five = 5;
@@ -323,6 +323,8 @@ return false;
 
 10 == 10;
 10 != 9;
+"foobar"
+"foo bar"
 `
 
 	tests := []struct {
@@ -402,6 +404,8 @@ return false;
 		{token.NOT_EQ, "!="},
 		{token.INT, "9"},
 		{token.SEMICOLON, ";"},
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
 		{token.EOF, ""},
 	}
 
