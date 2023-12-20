@@ -14,9 +14,9 @@ const (
 	// Identifiers + literals
 
 	IDENT = "IDENT" // add, fn, x, y
-	INT   = "INT"   //1,2,3,4,5,6...
+	INT   = "INT"   // 1,2,3,4,5,6...
 
-	//Operators
+	// Operators
 
 	ASSIGN   = "="
 	PLUS     = "+"
@@ -49,6 +49,7 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+	STRING   = "STRING"
 )
 
 var keywords = map[string]TokenType{
