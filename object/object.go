@@ -1,7 +1,10 @@
 package object
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/Neal-C/interpreter-in-go/ast"
+	"strings"
 )
 
 const (
@@ -10,6 +13,7 @@ const (
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	ERROR_OBJ        = "ERROR"
+	FUNCTION_OBJ     = "FUNCTION"
 )
 
 type ObjectType string
@@ -50,3 +54,28 @@ type Error struct {
 
 func (self *Error) Type() ObjectType { return ERROR_OBJ }
 func (self *Error) Inspect() string  { return "ERROR: " + self.Message }
+
+type Function struct {
+	Parameters []*ast.Identifier
+	Body       *ast.BlockStatement
+	Env        *Environment
+}
+
+func (self *Function) Type() ObjectType { return FUNCTION_OBJ }
+func (self *Function) Inspect() string {
+	var out bytes.Buffer
+	var params []string
+
+	for _, param := range self.Parameters {
+		params = append(params, param.String())
+	}
+
+	out.WriteString("fn")
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(self.Body.String())
+	out.WriteString("}\n")
+
+	return out.String()
+}
