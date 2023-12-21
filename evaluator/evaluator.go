@@ -150,6 +150,8 @@ func evalInfixExpression(operator string, leftHandSign object.Object, rightHandS
 		return nativeNodeToBooleanObject(leftHandSign != rightHandSign)
 	case leftHandSign.Type() != rightHandSign.Type():
 		return newError("type mismatch: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
+	case leftHandSign.Type() == object.STRING_OBJ && rightHandSign.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, leftHandSign, rightHandSign)
 	default:
 		return newError("unknown operator: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
 	}
@@ -292,4 +294,14 @@ func unwrapReturnValue(obj object.Object) object.Object {
 	}
 
 	return obj
+}
+
+func evalStringInfixExpression(operator string, leftHandSign object.Object, rightHandSign object.Object) object.Object {
+	if operator != "+" {
+		return newError("unknown operator: %s %s %s", leftHandSign.Type(), operator, rightHandSign.Type())
+	}
+
+	leftValue := leftHandSign.(*object.String).Value
+	rightValue := rightHandSign.(*object.String).Value
+	return &object.String{Value: leftValue + rightValue}
 }
