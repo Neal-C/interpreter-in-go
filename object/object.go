@@ -76,7 +76,7 @@ func (self *Function) Inspect() string {
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(") {\n")
 	out.WriteString(self.Body.String())
-	out.WriteString("}\n")
+	out.WriteString("\n}")
 
 	return out.String()
 }
