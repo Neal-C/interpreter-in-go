@@ -681,4 +681,24 @@ func testInfixExpression(t *testing.T, expression ast.Expression, leftHand any, 
 	return true
 }
 
-// TODO: clean test suite by using the test utils
+func TestStringLiteralExpression(t *testing.T) {
+	input := `"hello world";`
+
+	myLexer := lexer.New(input)
+	myParser := New(myLexer)
+	program := myParser.ParseProgram()
+	checkParserErrors(t, myParser)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not *ast.StringLiteral, got = %T", stmt.Expression)
+	}
+
+	if literal.Value != "hello world" {
+		t.Errorf("literal.Value not %q, got = %q", "hello world", literal.Value)
+	}
+
+}
