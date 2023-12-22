@@ -242,11 +242,15 @@ func isError(obj object.Object) bool {
 }
 
 func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object {
-	value, ok := env.Get(node.Value)
-	if !ok {
-		return newError("identifier not found: " + node.Value)
+
+	if value, ok := env.Get(node.Value); ok {
+		return value
 	}
-	return value
+
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+	return newError("identifier not found: " + node.Value)
 }
 
 func evalExpressions(expressions []ast.Expression, env *object.Environment) []object.Object {
