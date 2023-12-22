@@ -338,7 +338,7 @@ func TestBuiltinFunctions(t *testing.T) {
 		input    string
 		expected any
 	}{
-		{`len("0")`, 0},
+		{`len("")`, 0},
 		{`len("four")`, 4},
 		{`len("hello world")`, 11},
 		{`len(1)`, "argument to len not supported, got INTEGER"},
