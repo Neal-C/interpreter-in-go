@@ -40,6 +40,9 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
+	LBRACKET = "["
+	RBRACKET = "]"
+
 	// KEYWORDS
 
 	FUNCTION = "FUNCTION"
