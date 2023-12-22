@@ -92,7 +92,7 @@ func (self *String) Inspect() string  { return self.Value }
 type BuiltinFunction func(args ...Object) Object
 
 type Builtin struct {
-	fn BuiltinFunction
+	Fn BuiltinFunction
 }
 
 func (self *Builtin) Type() ObjectType { return BUILTIN_OBJ }
