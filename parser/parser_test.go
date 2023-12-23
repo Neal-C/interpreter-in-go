@@ -727,3 +727,28 @@ func TestParsingArrayLiterals(t *testing.T) {
 	testInfixExpression(t, array.Elements[2], 3, "+", 3)
 
 }
+
+func TestParsingIndexExpression(t *testing.T) {
+	input := `myArray[1 + 1]`
+
+	myLexer := lexer.New(input)
+	myParser := New(myLexer)
+	program := myParser.ParseProgram()
+	checkParserErrors(t, myParser)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	indexExpr, ok := stmt.Expression.(*ast.IndexExpression)
+
+	if !ok {
+		t.Fatalf("expression is not *ast.IndexExpression, got=%T", stmt.Expression)
+	}
+
+	if !testIdentifier(t, indexExpr, "myArray") {
+		return
+	}
+
+	if !testInfixExpression(t, indexExpr.Index, 1, "+", 1) {
+		return
+	}
+
+}
