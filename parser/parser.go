@@ -23,6 +23,7 @@ const (
 	PREFIX
 	// // myFunction(x)
 	CALL
+	INDEX
 )
 
 type Parser struct {
@@ -429,6 +430,7 @@ var precedences = map[token.TokenType]int{
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
+	token.LBRACKET: INDEX,
 }
 
 func (self *Parser) peekPrecedence() int {
