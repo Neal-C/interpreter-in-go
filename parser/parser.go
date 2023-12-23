@@ -78,6 +78,7 @@ func New(lexer *lexer.Lexer) *Parser {
 	parser.registerInfix(token.LT, parser.parseInfixExpression)
 	parser.registerInfix(token.GT, parser.parseInfixExpression)
 	parser.registerInfix(token.LPAREN, parser.parseCallExpression)
+	parser.registerInfix(token.LBRACKET, parser.parseIndexExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
 	parser.nextToken()
@@ -486,4 +487,18 @@ func (self *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
 
 	return list
 
+}
+
+func (self *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
+	expr := &ast.IndexExpression{Token: self.currentToken, Left: left}
+
+	self.nextToken()
+
+	expr.Index = self.parseExpression(LOWEST)
+
+	if !self.expectPeek(token.RBRACKET) {
+		return nil
+	}
+
+	return expr
 }
