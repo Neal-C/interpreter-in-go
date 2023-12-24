@@ -358,9 +358,9 @@ func evalArrayIndexExpression(array object.Object, index object.Object) object.O
 
 	arrayObject := array.(*object.Array)
 	idx := index.(*object.Integer).Value
-	max := int64(len(arrayObject.Elements) - 1)
+	maxIndexBoundary := int64(len(arrayObject.Elements) - 1)
 
-	if idx < 0 || idx > max {
+	if idx < 0 || idx > maxIndexBoundary {
 		return NULL
 	}
 
