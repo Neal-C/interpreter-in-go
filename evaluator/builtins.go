@@ -48,7 +48,7 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to first must be an ARRAY, got %s", args[0].Type())
+				return newError("argument to last must be an ARRAY, got %s", args[0].Type())
 			}
 
 			myArray := args[0].(*object.Array)
@@ -67,7 +67,7 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to first must be an ARRAY, got %s", args[0].Type())
+				return newError("argument to rest must be an ARRAY, got %s", args[0].Type())
 			}
 
 			myArray := args[0].(*object.Array)
@@ -79,6 +79,26 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			return NULL
+		},
+	},
+	"push": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 2 {
+				return newError("wrong number of arguments. got=%d, want=2", len(args))
+			}
+
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("argument to push must be an ARRAY, got %s", args[0].Type())
+			}
+
+			myArray := args[0].(*object.Array)
+			length := len(myArray.Elements)
+
+			newElements := make([]object.Object, length+1)
+			copy(newElements, myArray.Elements)
+			newElements[length] = args[1]
+			return &object.Array{Elements: newElements}
+
 		},
 	},
 }
