@@ -795,3 +795,98 @@ func TestParsingHashLiteralsStringKeys(t *testing.T) {
 		testIntegerLiteral(t, value, expectedValue)
 	}
 }
+
+func TestParsingEmptyHashLiteral(t *testing.T) {
+	input := `{}`
+
+	myLexer := lexer.New(input)
+	myParser := New(myLexer)
+	program := myParser.ParseProgram()
+	checkParserErrors(t, myParser)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	hashliteral, ok := stmt.Expression.(*ast.HashLiteral)
+
+	if !ok {
+		t.Fatalf("hashliteral is not a *ast.HashLiteral, got = %T", stmt.Expression)
+	}
+
+	if len(hashliteral.Pairs) != 0 {
+		t.Errorf("hashliteral.Pairs has the wrong length. got = %d", len(hashliteral.Pairs))
+	}
+
+}
+
+func TestParsingHashLiteralsBooleanKeys(t *testing.T) {
+	input := `{true: 1, false: 0}`
+
+	myLexer := lexer.New(input)
+	myParser := New(myLexer)
+	program := myParser.ParseProgram()
+	checkParserErrors(t, myParser)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	hashliteral, ok := stmt.Expression.(*ast.HashLiteral)
+
+	if !ok {
+		t.Fatalf("hashliteral is not a *ast.HashLiteral, got = %T", stmt.Expression)
+	}
+
+	if len(hashliteral.Pairs) != 3 {
+		t.Errorf("hashliteral.Pairs has the wrong length. got = %d", len(hashliteral.Pairs))
+	}
+
+	expected := map[bool]int64{
+		true:  1,
+		false: 0,
+	}
+
+	for key, value := range hashliteral.Pairs {
+		literal, ok := key.(*ast.Boolean)
+
+		if !ok {
+			t.Errorf("key is not is *ast.Boolean, got = %T", key)
+		}
+
+		expectedValue := expected[literal.Value]
+
+		testIntegerLiteral(t, value, expectedValue)
+	}
+}
+
+func TestParsingHashLiteralsIntegerKeys(t *testing.T) {
+	input := `{1: 2, 3: 4}`
+
+	myLexer := lexer.New(input)
+	myParser := New(myLexer)
+	program := myParser.ParseProgram()
+	checkParserErrors(t, myParser)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	hashliteral, ok := stmt.Expression.(*ast.HashLiteral)
+
+	if !ok {
+		t.Fatalf("hashliteral is not a *ast.HashLiteral, got = %T", stmt.Expression)
+	}
+
+	if len(hashliteral.Pairs) != 3 {
+		t.Errorf("hashliteral.Pairs has the wrong length. got = %d", len(hashliteral.Pairs))
+	}
+
+	expected := map[int64]int64{
+		1: 2,
+		3: 4,
+	}
+
+	for key, value := range hashliteral.Pairs {
+		literal, ok := key.(*ast.IntegerLiteral)
+
+		if !ok {
+			t.Errorf("key is not is *ast.Boolean, got = %T", key)
+		}
+
+		expectedValue := expected[literal.Value]
+
+		testIntegerLiteral(t, value, expectedValue)
+	}
+}
