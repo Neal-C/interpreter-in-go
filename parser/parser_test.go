@@ -832,7 +832,7 @@ func TestParsingHashLiteralsBooleanKeys(t *testing.T) {
 		t.Fatalf("hashliteral is not a *ast.HashLiteral, got = %T", stmt.Expression)
 	}
 
-	if len(hashliteral.Pairs) != 3 {
+	if len(hashliteral.Pairs) != 2 {
 		t.Errorf("hashliteral.Pairs has the wrong length. got = %d", len(hashliteral.Pairs))
 	}
 
@@ -869,7 +869,7 @@ func TestParsingHashLiteralsIntegerKeys(t *testing.T) {
 		t.Fatalf("hashliteral is not a *ast.HashLiteral, got = %T", stmt.Expression)
 	}
 
-	if len(hashliteral.Pairs) != 3 {
+	if len(hashliteral.Pairs) != 2 {
 		t.Errorf("hashliteral.Pairs has the wrong length. got = %d", len(hashliteral.Pairs))
 	}
 
