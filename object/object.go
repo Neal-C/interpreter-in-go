@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/Neal-C/interpreter-in-go/ast"
+	"hash/fnv"
+	"log"
 	"strings"
 )
 
@@ -118,4 +120,35 @@ func (self *Array) Inspect() string {
 	out.WriteString("]")
 
 	return out.String()
+}
+
+type HashKey struct {
+	Type  ObjectType
+	Value uint64
+}
+
+func (self *Boolean) HashKey() HashKey {
+	var value uint64
+
+	if self.Value {
+		value = 1
+	} else {
+		value = 0
+	}
+
+	return HashKey{Type: self.Type(), Value: value}
+}
+
+func (self *Integer) HashKey() HashKey {
+	return HashKey{Type: self.Type(), Value: uint64(self.Value)}
+}
+
+func (self *String) HashKey() HashKey {
+	h := fnv.New64()
+	_, err := h.Write([]byte(self.Value))
+	if err != nil {
+		log.Println("fnv.New64.Write failed: ", err)
+	}
+
+	return HashKey{Type: self.Type(), Value: h.Sum64()}
 }
