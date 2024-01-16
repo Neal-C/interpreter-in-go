@@ -20,7 +20,7 @@
 
 To try it out:
 
-requirements : Go >= 1.13
+requirements : Go >= 1.13 or Docker
 
 ```shell
 git clone git@github.com:Neal-C/interpreter-in-go.git
@@ -30,11 +30,26 @@ go run .
 # run executable : ./bin/interpreter
 ```
 
+or via Docker by running my image
+
+```shell
+git clone git@github.com:Neal-C/interpreter-in-go.git
+cd interpreter-in-go
+docker build -t nealc:interpreter .
+# builds the image
+docker run -it --name nealc-interpreter nealc:interpreter 
+# runs the image
+```
+
 Try a few a lines:
 
 - try some of the built-in functions from ./evaluator/builtins.go
 - try higher-order functions
-- try lists and index access 
+- try lists and index access
+- try to define a function and call it !
+
+
+  (omit the ">>")
 
 ```shell
 >> puts("Hello!")
