@@ -20,7 +20,7 @@
 
 To try it out:
 
-requirements : Go >= 1.13 or Docker
+requirements : Go >= 1.21.3 or Docker
 
 ```shell
 git clone git@github.com:Neal-C/interpreter-in-go.git
@@ -53,18 +53,29 @@ Try a few a lines:
 
 ```shell
 >> puts("Hello!")
-#Hello!
-#null
+# Hello!
+# null
 >> puts(1234)
-#1234
-#null
+# 1234
+# null
 >> let people = [{"name": "Alice", "age": 24}, {"name": "Anna", "age": 22}];
 >> people[0]["name"];
 # Alice
 >> len(people)
-#2
+# 2
 >> first(people)
-#{"name": "Alice", "age": 24}
+# {"name": "Alice", "age": 24}
+>> if (true) { 42 } else { "never"};
+# 42
+>> let a = 20
+>> let b = 22;
+>> a == b
+# false
+>> a + b;
+# 42
+>> let sum = fn(x,y) { return x + y };
+>> sum(a,b)
+# 42
 ```
 
 
