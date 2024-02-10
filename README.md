@@ -47,34 +47,38 @@ Try a few a lines:
 - try higher-order functions
 - try lists and index access
 - try to define a function and call it !
+- Check the test cases in ./**/*_test.go files to see what behaviors and features are supported
 
 
-  (omit the ">>")
 
 ```shell
->> puts("Hello!")
+puts("Hello!")
 # Hello!
 # null
->> puts(1234)
+puts(1234)
 # 1234
 # null
->> let people = [{"name": "Alice", "age": 24}, {"name": "Anna", "age": 22}];
->> people[0]["name"];
+let people = [{"name": "Alice", "age": 24},{"name": "Neal-C", "age": 999}, {"name": "Anna", "age": 22}];
+people[0]["name"];
 # Alice
->> len(people)
-# 2
->> first(people)
+len(people)
+# 3
+first(people)
 # {"name": "Alice", "age": 24}
->> if (true) { 42 } else { "never"};
+last(people)
+# {"name": "Anna", "age": 22} 
+if (true) { 42 } else { "never"};
 # 42
->> let a = 20
->> let b = 22;
->> a == b
+if (false) { 42 } else { return "never" }
+# "never"
+let a = 20
+let b = 22;
+a == b
 # false
->> a + b;
+a + b;
 # 42
->> let sum = fn(x,y) { return x + y };
->> sum(a,b)
+let sum = fn(x,y) { return x + y };
+sum(a,b)
 # 42
 ```
 
