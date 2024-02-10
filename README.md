@@ -58,16 +58,16 @@ puts("Hello!")
 puts(1234)
 # 1234
 # null
-let people = [{"name": "Alice", "age": 24},{"name": "Neal-C", "age": 999}, {"name": "Anna", "age": 22}];
+let people = [{"name": "Alice", "age": 24},{"name": "Neal-C", "age": 999}];
 people[0]["name"];
 # Alice
 len(people)
-# 3
+# 2
 first(people)
 # {"name": "Alice", "age": 24}
 last(people)
-# {"name": "Anna", "age": 22} 
-if (true) { 42 } else { "never"};
+# {"name": "Neal-C", "age": 999} 
+if (true) { 42 } else { "never" };
 # 42
 if (false) { 42 } else { return "never" }
 # "never"
